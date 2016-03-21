@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+// I am writing this comment to check if everything works.
 typedef struct BST
 {
 	int key;
