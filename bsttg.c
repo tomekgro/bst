@@ -209,6 +209,11 @@ void insert(node *root, node *new_node)
 
 
 /* checking if the given key appears in the tree with a given root and returning YES/NO answer */
+
+/*@ requires \valid(root);
+    ensures \result == 0 || \result == 1;
+*/
+
 int search(node *root, int searchedkey)
 {
 	node *temp;
@@ -222,7 +227,6 @@ int search(node *root, int searchedkey)
 	} 
 	return appears;
 }
-
 
 
 /* deleting a node with the given key */
@@ -381,6 +385,15 @@ void deletenode (node **deletedroot) // Deletes a given node. "deletedroot" is a
 }
 
 
+/*@ requires \valid(root);
+    ensures (root->left == NULL && root->right == NULL && root->depth == 0) ||
+            (root->left == NULL && root->right != NULL && root->depth == root->right->depth +1) ||
+            (root->right == NULL && root->left != NULL && root->depth == root->left-depth +1) ||
+            (root->left != NULL && root->right != NULL &&
+             root->depth => root->left->depth && root->depth => root->right->depth &&
+             (root->depth = root->left->depth +1 || root->depth = root->right->depth +1)
+            );
+*/
 
 void updatedepth(node *root) // It starts with the given node and goes upwards, to the root - updating each depth.
 {
