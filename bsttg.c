@@ -303,7 +303,7 @@ void deletenode (node **deletedroot) // Deletes a given node. "deletedroot" is a
 	}
 	else if ((*deletedroot)->right == NULL)
 	{
-		temp = (*deletedroot)->right;
+		temp = (*deletedroot)->left;
 		free(*deletedroot);
 		temp->p = NULL;
 		*deletedroot = temp;
