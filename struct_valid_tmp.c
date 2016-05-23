@@ -64,24 +64,19 @@ void TreeWalk_change_nothing_DownAndUp(TreeWalk *k, int Upwards){
           return;
         else {
           if(k->left == go)
-            {
-            if (k->left == NULL) TreeWalk_change_nothing_DownAndUp(k,1);
-            else TreeWalk_change_nothing_DownAndUp(k->p_left,0);
-            }
+            TreeWalk_change_nothing_DownAndUp(k->p_left,0);
+          else TreeWalk_change_nothing_DownAndUp(k,1);
           if(k->right == go)
-            {
-            if (k->right == NULL) TreeWalk_change_nothing_DownAndUp(k,1);
-            else TreeWalk_change_nothing_DownAndUp(k->p_right,0);
-            }
+            TreeWalk_change_nothing_DownAndUp(k->p_right,0);
+          else TreeWalk_change_nothing_DownAndUp(k,1);
           }
         break;
 
       case 1:
-        if(k==NULL)  {return;}
+        if(k==NULL) return;
        else
          {
-         if(k->up == go)
-         TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
+         if(k->up == go) TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
          }
        break;
     }
