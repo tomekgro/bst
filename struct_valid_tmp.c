@@ -109,3 +109,22 @@ void struct_recursion_simple(Memory *k){
   if(k->which==stop)
     return;
 }
+
+
+/*@ requires \valid(p) && valid_TreeWalk_ptr(p) && \valid(root) && valid_TreeWalk_ptr(root);
+  @ assigns \nothing;
+  @*/
+
+int CountPtr(TreeWalk *root, TreeWalk *p, int n)
+{
+        int counter;
+        counter = n;
+        if (root == NULL) return counter;
+        else
+        {
+          counter = CountPtr(root->p_left,p,counter);
+          if (root == p) counter = counter+1;
+          counter = CountPtr(root->p_right,p,counter);
+        }
+        return counter;
+}
