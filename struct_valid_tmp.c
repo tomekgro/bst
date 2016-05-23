@@ -60,10 +60,8 @@ void TreeWalk_change_nothing_DownAndUp(TreeWalk *k, int Upwards){
     switch (Upwards)
     {
       case 0:
-        if(k==NULL){
-          TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
+        if(k==NULL)
           return;
-            }
         else {
           if(k->left == go)
             {
