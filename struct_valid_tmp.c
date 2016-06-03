@@ -42,9 +42,9 @@ void TreeWalk_change_nothing(TreeWalk *k){
   if(k==NULL)
     return;
   else {
-     if(k->left == go)
+     if(k->p_left != NULL)
       TreeWalk_change_nothing(k->p_left);
-     if(k->right==go)
+     if(k->p_right != NULL)
        TreeWalk_change_nothing(k->p_right);
   }
 }
@@ -60,23 +60,24 @@ void TreeWalk_change_nothing_DownAndUp(TreeWalk *k, int Upwards){
     switch (Upwards)
     {
       case 0:
-        if(k==NULL)
+        if(k==NULL){
+          //TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
           return;
+            }
         else {
-          if(k->left == go)
+          if(k->p_left != NULL)
             TreeWalk_change_nothing_DownAndUp(k->p_left,0);
-          else TreeWalk_change_nothing_DownAndUp(k,1);
-          if(k->right == go)
+          if(k->p_right != NULL)
             TreeWalk_change_nothing_DownAndUp(k->p_right,0);
-          else TreeWalk_change_nothing_DownAndUp(k,1);
           }
         break;
 
       case 1:
-        if(k==NULL) return;
+        if(k==NULL)  {return;}
        else
          {
-         if(k->up == go) TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
+         if(k->p_parent != NULL)
+         TreeWalk_change_nothing_DownAndUp(k->p_parent,1);
          }
        break;
     }
@@ -91,9 +92,9 @@ void TreeWalk_change_nothing_DownAndUp(TreeWalk *k, int Upwards){
 void TreeWalk_change_nothing_with_case(TreeWalk *k){
   if(k==NULL)
     return;
-  if(k->left == go)
+  if(k->p_left != NULL)
      TreeWalk_change_nothing(k->p_left);
-  if(k->right==go)
+  if(k->p_right != NULL)
        TreeWalk_change_nothing(k->p_right);
 }
 
@@ -123,8 +124,18 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
         else
         {
           counter = CountPtr(root->p_left,p,counter);
-          if (root == p) counter = counter+1;
+          if (root == p && counter<100) counter = counter+1;
           counter = CountPtr(root->p_right,p,counter);
         }
         return counter;
+}
+
+
+/*@  
+  @  assigns \nothing;
+  @*/
+
+void DoNothing(void){
+  int c=1;
+  return;
 }
