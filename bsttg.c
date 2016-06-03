@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "struct_valid_tmp_tmp.h"
+
 // I am writing this comment to check if everything works.
 typedef struct BST
 {
@@ -26,7 +28,7 @@ void preorder_tree_walk (node *);
 
 void main()
 {
-   int choice;
+   int choice,ptrcounter;
    int searchedkey, deletedkey;
    node *new_node;
    root = NULL;
@@ -44,7 +46,7 @@ void main()
 	printf("\n7. Show the root's depth");
 	printf("\n8. Show the increasing list of elements.");
 	printf("\n9. Show the list of elements along the branches.");
-	printf("\n0. Exit");
+	printf("\n0. Exit\n");
 	scanf("%d", &choice);
 
 	switch (choice)
@@ -151,7 +153,16 @@ void main()
 			if (root == NULL) printf("\n The tree is empty.");
 			else list_along_branches(root);
 			break;
-	}
+                case 10:
+                        No_Diamonds(root);
+                        break;
+		case 11:
+			ptrcounter = CountPtr(root,root,0);
+			printf("\nThe given pointer appears ");
+ 			printf("%d",ptrcounter);
+			printf(" time(s) in the tree.");
+
+        }
 		
    } while (choice != 0);
 
@@ -385,7 +396,7 @@ void deletenode (node **deletedroot) // Deletes a given node. "deletedroot" is a
 }
 
 
-/*@ requires \valid(root);
+/* requires \valid(root);
     ensures (root->left == NULL && root->right == NULL && root->depth == 0) ||
             (root->left == NULL && root->right != NULL && root->depth == root->right->depth +1) ||
             (root->right == NULL && root->left != NULL && root->depth == root->left-depth +1) ||
@@ -449,4 +460,58 @@ void preorder_tree_walk(node *root)
 		preorder_tree_walk(root->left);
 		preorder_tree_walk(root->right);
 	}
+}
+
+/*@ requires \valid(k) && valid_TreeWalk_ptr(k);
+  @ assigns \nothing;
+  @*/
+
+
+int No_Diamonds(node *k)
+{
+  if (k==NULL)
+    return;
+  else
+  {
+    if(k->left != NULL)
+    {
+      if (k->left->p == k) return 0;
+      No_Diamonds(k->left);
+    }
+    if(k->right != NULL)
+    {
+      if (k->right->p == k) return 0;
+      No_Diamonds(k->right);
+    }
+  }
+  return 1;
+}
+
+
+
+void TreeWalk_change_nothing(TreeWalk *k){
+  if(k==NULL)
+    return;
+  else {
+     if(k->left == go)
+      TreeWalk_change_nothing(k->p_left);
+     if(k->right==go)
+       TreeWalk_change_nothing(k->p_right);
+  }
+}
+
+
+int CountPtr(node *root, node *p, int n)
+{
+        int counter;
+        counter = n;
+        if (root == NULL) return counter;
+        else 
+        {
+          counter = CountPtr(root->left,p,counter);
+          if (root == p) counter = counter+1;
+          counter = CountPtr(root->right,p,counter);
+          
+        }
+        return counter;
 }
