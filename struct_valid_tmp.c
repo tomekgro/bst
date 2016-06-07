@@ -238,7 +238,7 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
         return counter;
 }
 
-/*@ requires \valid(p) && valid_TreeWalk_ptr(p) && \valid(root) && valid_TreeWalk_ptr(root);
+/*@ requires \valid(root) && valid_TreeWalk_ptr(root);
   @ assigns \nothing;
 
   @*/
@@ -257,3 +257,4 @@ int CountVal(TreeWalk *root, int val, int n)
         }
         return counter;
 }
+
