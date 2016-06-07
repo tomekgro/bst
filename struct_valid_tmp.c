@@ -9,6 +9,114 @@
 void struct_change_nothing1(Memory*);
 void struct_change_nothing2(Memory*);
 
+void multi_insert(TreeWalk *, TreeWalk *);
+TreeWalk *get_TreeWalk();
+int CountVal(TreeWalk *, int, int);
+void updatedepth (TreeWalk *);
+
+
+TreeWalk *root;
+int appears;
+
+void main()
+{
+   int choice,ptrcounter;
+   int searchedkey, deletedkey;
+   TreeWalk *new_TreeWalk;
+   root = NULL;
+   int leftdepth, rightdepth;
+   do
+   {  
+
+	scanf("%d", &choice);
+
+	switch (choice)
+	{
+		case 1: // We create a new node and make it a root if the tree was empty or use the function 'multi_insert'.
+			new_TreeWalk = get_TreeWalk();
+			scanf("%d", &new_TreeWalk->key);
+			if (root == NULL) /* tree was empty */
+			{
+				root = new_TreeWalk;
+			}
+			else multi_insert(root, new_TreeWalk);
+			break;
+	
+		case 2:
+			scanf("%d", &searchedkey);
+			appears = CountVal(root,searchedkey,0);
+			printf("\nThe given value appears ");
+			printf("%d", appears);
+			printf(" time(s) in the requested tree.");
+			break;
+	
+   	}
+
+   } while (choice != 0);
+}
+// FUNCTIONS FROM BSTTG
+
+/* getiing a new node  */
+TreeWalk *get_TreeWalk()
+{
+	TreeWalk *temp;
+	temp = (TreeWalk *) malloc(sizeof(TreeWalk));
+	temp->p_left = NULL;
+	temp->p_right = NULL;
+	temp->p_parent = NULL;
+	temp->depth = 0;
+	temp->weight = 0;
+	return temp;
+}
+
+/* inserting a node to an existing tree, multiple version */
+void multi_insert(TreeWalk *root, TreeWalk *new_TreeWalk)
+{
+	if (new_TreeWalk->key < root->key)
+	{
+		if (root->p_left == NULL)
+		{
+			root->p_left = new_TreeWalk;
+			new_TreeWalk->p_parent = root;
+			updatedepth(root); // Updates the depth of every node above the inserted node.
+		}
+		else multi_insert(root->p_left, new_TreeWalk);
+	}
+
+	else if (new_TreeWalk->key >= root->key)
+	{
+        	if (root->p_right == NULL)
+        	{
+		root->p_right = new_TreeWalk;
+        	new_TreeWalk->p_parent = root;
+	        updatedepth(root); // Updates the depth of every node above the inserted node.
+		}		
+        	else multi_insert(root->p_right, new_TreeWalk);
+	}
+
+}
+
+
+void updatedepth(TreeWalk *root) // It starts with the given node and goes upwards, to the root - updating each depth.
+{
+	TreeWalk *temp;
+	temp = root;
+	while (temp != NULL)
+	{
+		if (temp->p_left == NULL && temp->p_right == NULL) temp->depth = 0;
+		else if (temp->p_left == NULL) temp->depth = (temp->p_right->depth +1);
+		else if (temp->p_right == NULL) temp->depth = (temp->p_left->depth +1); 
+		else if (temp->p_left->depth > temp->p_right->depth) temp->depth = (temp->p_left->depth +1);
+		else temp->depth = (temp->p_right->depth +1);
+		temp = temp->p_parent;
+	}
+}
+
+
+
+// FUNCTIONS FROM STRUCT_VALID_TMP
+
+
 /*@ requires \valid(k) && valid_Memory_ptr(k);
   @ assigns \nothing;
   @*/
@@ -130,12 +238,22 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
         return counter;
 }
 
+/*@ requires \valid(p) && valid_TreeWalk_ptr(p) && \valid(root) && valid_TreeWalk_ptr(root);
+  @ assigns \nothing;
 
-/*@  
-  @  assigns \nothing;
   @*/
 
-void DoNothing(void){
-  int c=1;
-  return;
+int CountVal(TreeWalk *root, int val, int n)
+
+{
+        int counter;
+        counter = n;
+        if (root == NULL) return counter;
+        else
+        {
+          counter = CountVal(root->p_left,val,counter);
+          if (root->key == val && counter<100) counter = counter+1;
+          counter = CountVal(root->p_right,val,counter);
+        }
+        return counter;
 }
