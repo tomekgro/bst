@@ -70,6 +70,11 @@ TreeWalk *get_TreeWalk()
 }
 
 /* inserting a node to an existing tree, multiple version */
+
+/*@ requires \valid(root) && valid_TreeWalk_ptr(root) && \valid(new_TreeWalk) && valid_TreeWalk_ptr(new_TreeWalk);
+  @ assigns \nothing;
+  @*/
+
 void multi_insert(TreeWalk *root, TreeWalk *new_TreeWalk)
 {
 	if (new_TreeWalk->key < root->key)
@@ -96,6 +101,9 @@ void multi_insert(TreeWalk *root, TreeWalk *new_TreeWalk)
 
 }
 
+/* @ requires \valid(root) && valid_TreeWalk_ptr(root);
+   @ assigns \nothing;
+   @ */
 
 void updatedepth(TreeWalk *root) // It starts with the given node and goes upwards, to the root - updating each depth.
 {
@@ -109,6 +117,7 @@ void updatedepth(TreeWalk *root) // It starts with the given node and goes upwar
 		else if (temp->p_left->depth > temp->p_right->depth) temp->depth = (temp->p_left->depth +1);
 		else temp->depth = (temp->p_right->depth +1);
 		temp = temp->p_parent;
+
 	}
 }
 
@@ -238,9 +247,15 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
         return counter;
 }
 
-/*@ requires \valid(root) && valid_TreeWalk_ptr(root);
+/*@ requires \valid(root) && valid_TreeWalk_ptr(root) && n<=100;
+  @
   @ assigns \nothing;
-
+  @
+  @ ensures \result <=100;
+  @ ensures \forall int m; (m == 100) ==> \result <=m;
+  @ ensures \forall int m; (\result == m) ==> TreeWalk_Exists_Value_Count(root,val,m); 
+  @ ensures \forall int m; TreeWalk_Exists_Value_Count(root,val,m) ==> (\result == m); 
+  @
   @*/
 
 int CountVal(TreeWalk *root, int val, int n)
@@ -251,9 +266,9 @@ int CountVal(TreeWalk *root, int val, int n)
         if (root == NULL) return counter;
         else
         {
-          counter = CountVal(root->p_left,val,counter);
+          if (root->p_left != NULL) counter = CountVal(root->p_left,val,counter);
           if (root->key == val && counter<100) counter = counter+1;
-          counter = CountVal(root->p_right,val,counter);
+          if (root->p_right != NULL) counter = CountVal(root->p_right,val,counter);
         }
         return counter;
 }
