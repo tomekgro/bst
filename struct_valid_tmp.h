@@ -61,6 +61,14 @@ void struct_change_nothing2(Memory*);
   @ lemma valid_TreeWalk_ptr_to_valid{L}: \forall TreeWalk *k;
   @        valid_TreeWalk_ptr{L}(k) ==> \valid{L}(k);
   @
+  @ lemma valid_TreeWalk_ptr_to_valid_p_left{L}: \forall TreeWalk *k;
+  @        (valid_TreeWalk_ptr{L}(k)&& ((k->p_left)!=\null)) ==> 
+  @                     valid_TreeWalk_ptr{L}(k->p_left);
+  @
+  @ lemma valid_TreeWalk_ptr_to_valid_p_right{L}: \forall TreeWalk *k;
+  @        (valid_TreeWalk_ptr{L}(k)&& ((k->p_right)!=\null)) ==> 
+  @                     valid_TreeWalk_ptr{L}(k->p_right);
+  @
   @*/
 
 /*@ axiomatic Ax_TreeWalk_Exists_Value { 
@@ -115,10 +123,10 @@ void struct_change_nothing2(Memory*);
   @			)))  )   );
   @
   @
-  @
-  @
-  @
-  @
+  @ lemma Zero_Value_Count{L}:
+  @	\forall TreeWalk *k, int v, int z; ((z == 0) && TreeWalk_Exists_Value_Count{L}(k,v,z)) ==> 
+  @	(k==\null || ( k!=\null && k->key != v && (TreeWalk_Exists_Value_Count{L}(k->p_left,v,z)) && 
+  @	(TreeWalk_Exists_Value_Count{L}(k->p_right,v,z))));
   @
   @
   @
