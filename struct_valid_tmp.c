@@ -306,6 +306,8 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
   @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m == 2 && m == l+r && root != \null &&
   @	root->key != val && TreeWalk_Exists_Value_Count(root->p_left,val,l) && TreeWalk_Exists_Value_Count(root->p_right,val,r) ) ==>
   @	\result == n+m;
+  @
+  @ ensures root != \null;
   @*/
 
 int CountVal(TreeWalk *root, int val, int n)
