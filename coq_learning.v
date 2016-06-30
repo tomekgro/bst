@@ -214,3 +214,100 @@ intros not_False.
 exact I.
 
 Qed.
+
+(* The proposition "ex P" should be read:
+"P is a function returning a Prop and there exists an argument
+to that function such that (P arg) has been proven".
+The function "P" is known as "the predicate". The constructor for "ex P"
+takes the predicate "P" , the witness (called "x" here)
+and a proof of "P x" in order to return something of type "ex P". *)
+
+Theorem thm_forall_exists : (forall b, (exists a, Is_true(eqb a b))).
+Proof.
+intros b.
+case b.
+(* b true *)
+pose (witness:= true).
+refine (ex_intro _ witness _).
+simpl.
+exact I.
+(* b false *)
+pose (witness:= false).
+refine (ex_intro _ witness _).
+simpl.
+exact I.
+Qed.
+
+Theorem thm_eq_trans : (forall x y z: Set, x = y -> y = z -> x = z).
+Proof.
+intros x y z.
+intros x_equals_y.
+destruct x_equals_y as [].
+intros x_equals_z.
+destruct x_equals_z as [].
+exact eq_refl.
+Qed.
+
+Theorem thm_eq_trans_with_rewrite : (forall x y z: Set, x = y -> y = z -> x = z).
+Proof.
+intros x y z.
+intros x_y y_z.
+rewrite x_y.
+rewrite y_z.
+exact (eq_refl z).
+Qed.
+
+Theorem andb_sym : (forall a b, a && b = b && a).
+Proof.
+intros a b.
+case a,b.
+(* true true *)
+simpl.
+exact eq_refl.
+(* false true *)
+simpl.
+exact eq_refl.
+(* true false *)
+simpl.
+exact eq_refl.
+(* false false *)
+simpl.
+exact eq_refl.
+Qed.
+
+Theorem plus_sym: (forall n m, n + m = m + n).
+Proof.
+intros n m.
+elim m.
+(* base case for m *)
+
+elim n.
+(* base case for n *)
+simpl.
+exact eq_refl.
+(* inductive case for n *)
+intros n0.
+intros inductive_hypothesis.
+simpl.
+rewrite inductive_hypothesis.
+simpl.
+exact eq_refl.
+
+(* inductive case for m *)
+intros n0.
+intros inductive_hypothesis.
+simpl.
+rewrite <- inductive_hypothesis.
+
+elim n.
+(* base case for n *)
+simpl.
+exact eq_refl.
+(* inductive case for n *)
+intros n1.
+intros inductive_hypothesis1.
+simpl.
+rewrite <- inductive_hypothesis1.
+exact eq_refl.
+Qed.
+
