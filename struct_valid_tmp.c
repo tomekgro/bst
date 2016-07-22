@@ -143,6 +143,7 @@ void updateweight(TreeWalk *root) // It starts with the given node and goes upwa
 		else if (temp->p_left == NULL) temp->depth = (temp->p_right->weight +1);
 		else if (temp->p_right == NULL) temp->depth = (temp->p_left->weight +1);
 		else temp->weight = (temp->p_right->weight + temp->p_left->weight +1);
+
 		temp = temp->p_parent;
 
 	}
@@ -453,7 +454,7 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
   @
   @ ensures \forall int m; (m == 1 && \result == n+m) ==> TreeWalk_Exists_Value_Count(root,val,m); 
   @
-  @ 
+  @ ensures \forall int m; (m == 0 && \result == n) ==> TreeWalk_Exists_Value_Count(root,val,m);  
   @
   @ 
   @
@@ -465,7 +466,7 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
   @	root != \null && TreeWalk_Exists_Value_Count(root->p_left,val,m) && TreeWalk_Exists_Value_Count(root->p_right,val,m) &&
   @	root->key != val ) ==> (\result == n);
   @
-  @ ensures \forall int m; (m==0 && TreeWalk_Exists_Value_Count(root,val,m))==> \result == n;
+  @ ensures \forall int m; (m==0 && TreeWalk_Exists_Value_Count(root,val,m))==> \result == n+m;
   @
   @
   @
@@ -484,23 +485,15 @@ int CountPtr(TreeWalk *root, TreeWalk *p, int n)
   @	root->key != val && TreeWalk_Exists_Value_Count(root->p_left,val,l) && TreeWalk_Exists_Value_Count(root->p_right,val,r) ) ==>
   @	TreeWalk_Exists_Value_Count(root,val,m);
   @
-  @
-  @
-  @
   @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m < 100 && m == l+r &&
   @	root->key != val && TreeWalk_Exists_Value_Count(root->p_left,val,l) && TreeWalk_Exists_Value_Count(root->p_right,val,r) ) ==>
   @	TreeWalk_Exists_Value_Count(root,val,m);
   @
-  @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m < 100 && m == l+r &&
+  @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m == 1 && m == l+r &&
   @	root->key != val && TreeWalk_Exists_Value_Count(root->p_left,val,l) && TreeWalk_Exists_Value_Count(root->p_right,val,r) ) ==>
   @	\result == n+m;
   @
-  @ ensures \forall int m; (m==1 && TreeWalk_Exists_Value_Count(root,val,m)) ==> \result == n+m;
-  @
-  @
-  @
-  @
-  @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m == 1 && m == l+r &&
+  @ ensures \forall int m, int l, int r; (l >= 0 && r >= 0 && m == 2 && m == l+r &&
   @	root->key != val && TreeWalk_Exists_Value_Count(root->p_left,val,l) && TreeWalk_Exists_Value_Count(root->p_right,val,r) ) ==>
   @	\result == n+m;
   @ 
